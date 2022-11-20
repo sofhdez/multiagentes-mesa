@@ -1,7 +1,7 @@
 import mesa
 
-from model import VacuumModel
-from agents import Dirt, Vacuum
+# from model import VacuumModel
+from agents import Box, Vacuum, Obstacle, BoxStack, VacuumModel
 
 
 def agent_portrayal(agent):
@@ -15,26 +15,51 @@ def agent_portrayal(agent):
                  "Color": "red",
                  "r": 0.4}
 
-    if type(agent) is Dirt:
-        if agent.state == "Dirty":
+    if type(agent) is Box:
+        if agent.state == "boxe":
             portrayal["Color"] = "green"
             portrayal["Layer"] = 0
             portrayal["r"] = 0.5
             # portrayal["Shape"] = "resources/dirt.png"
             # portrayal["scale"] = 0.9
             portrayal["Layer"] = 0
+            portrayal["Id"] = agent.unique_id
 
         else:
             portrayal["Color"] = "white"
             portrayal["Layer"] = 1
             portrayal["r"] = 0.2
+            portrayal["Id"] = agent.unique_id
+
     elif type(agent) is Vacuum:
         portrayal["Color"] = "red"
         portrayal["Layer"] = 1
         portrayal["r"] = 0.5
         # portrayal["Shape"] = "resources/vacuum.png"
         # portrayal["scale"] = 0.9
+        portrayal["robot_id"] = agent.unique_id
+        portrayal["text_color"] = "black"
         portrayal["Layer"] = 1
+
+    elif type(agent) is Obstacle:
+        portrayal["Color"] = "black"
+        portrayal["Layer"] = 1
+        portrayal["r"] = 0.5
+        portrayal["Id"] = agent.unique_id
+        portrayal["text_color"] = "black"
+
+    elif type(agent) is BoxStack:
+        portrayal["Color"] = "blue"
+        portrayal["Layer"] = 1
+        portrayal["r"] = 0.5
+        portrayal["Id"] = agent.unique_id
+        portrayal["text_color"] = "black"
+
+        if agent.state == "active":
+            portrayal["Color"] = "blue"
+        elif agent.state == "inactive":
+            portrayal["Color"] = "yellow"
+            portrayal["r"] = 0.8
 
     return portrayal
 
@@ -45,9 +70,9 @@ height = 10
 # Create canvas grid
 grid = mesa.visualization.CanvasGrid(
     agent_portrayal, width, height, 500, 500)
-# Chart of dirty cells with labels
+# Chart of boxe cells with labels
 chart = mesa.visualization.ChartModule(
-    [{"Label": "Dirty cells", "Color": "Black"}],
+    [{"Label": "boxe cells", "Color": "Black"}],
     data_collector_name="datacollector",
 
     # set the x axis to be the step count
@@ -58,7 +83,7 @@ chart = mesa.visualization.ChartModule(
 # Pie chart of cells
 pie_chart = mesa.visualization.PieChartModule(
     [
-        {"Label": "Dirty cells", "Color": "Brown"},
+        {"Label": "boxe cells", "Color": "Brown"},
         {"Label": "Clean cells", "Color": "Blue"},
     ],
     data_collector_name="datacollector",
@@ -92,37 +117,21 @@ model_params = {
     "height": height,
 
     # Número de agentes
-    # "N": mesa.visualization.Slider(
-    #     "Number of vacuum cleaners",
-    #     10,
-    #     1,
-    #     20,
-    #     1,
-    #     description="Choose how many vacuum cleaners to include in the model",
-    # ),
-    "N": 6,
+    "N": 5,
 
     # Porcentaje de celdas inicialmente sucias
-    # "dirtyCells": mesa.visualization.Slider(
-    #     "Percentage of dirty cells",
+    # "boxeCells": mesa.visualization.Slider(
+    #     "Percentage of boxe cells",
     #     0.5,
     #     0.1,
     #     1.0,
     #     0.1,
-    #     description="Choose how many cells to start dirty",
+    #     description="Choose how many cells to start boxe",
     # ),
-    "dirtyCells": 0.5,
+    "boxeCells": 20,
 
     # Tiempo máximo de ejecución.
-    "max_steps": 100,
-    # "max_steps": mesa.visualization.Slider(
-    #     "Max steps",
-    #     20,
-    #     20,
-    #     100,
-    #     1,
-    #     description="Choose the maximum number of steps to run the model",
-    # ),
+    "max_steps": 300,
 }
 
 # Create server
