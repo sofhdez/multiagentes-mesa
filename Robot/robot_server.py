@@ -1,7 +1,7 @@
 import mesa
 
 # from model import VacuumModel
-from agents import Box, Vacuum, Obstacle, BoxStack, VacuumModel
+from robot_agents import Box, Vacuum, Obstacle, BoxStack, VacuumModel
 
 
 def agent_portrayal(agent):
@@ -128,7 +128,7 @@ model_params = {
     #     0.1,
     #     description="Choose how many cells to start boxe",
     # ),
-    "boxeCells": 20,
+    "boxeCells": 15,
 
     # Tiempo máximo de ejecución.
     "max_steps": 300,
@@ -137,9 +137,9 @@ model_params = {
 # Create server
 server = mesa.visualization.ModularServer(
     VacuumModel, [grid, chart, pie_chart,
-                  chart2, total_moves_chart], "Robot Model Tonto", model_params
+                  chart2, total_moves_chart], "Robot Model Inteligente", model_params
 )
 
 # Launch server
-server.port = 8522  # The default
+server.port = 8521  # The default
 server.launch()
