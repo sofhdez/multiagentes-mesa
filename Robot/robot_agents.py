@@ -74,7 +74,7 @@ class Vacuum(mesa.Agent):
             return True
 
     def step(self):
-        
+
         self.visited_cells.append((self.pos[0], self.pos[1]))
         if self.state == "Iniciando":
             self.state = "Moviendo"
@@ -86,16 +86,16 @@ class Vacuum(mesa.Agent):
             self.go_to_stack()
 
         # Imprimir el estado del agente de tipo Vacuum
-        print(
-            "Vacuum",
-            self.unique_id,
-            ":",
-            self.state,
-            ", stack:",
-            self.nearest_stack.unique_id,
-            ", pos:",
-            self.pos,
-        )
+        # print(
+        #     "Vacuum",
+        #     self.unique_id,
+        #     ":",
+        #     self.state,
+        #     ", stack:",
+        #     self.nearest_stack.unique_id,
+        #     ", pos:",
+        #     self.pos,
+        # )
 
     def move(self):
         # Obtiene la lista de las posiciones vecinas
@@ -108,14 +108,14 @@ class Vacuum(mesa.Agent):
             self.pos, moore=False, include_center=False
         )
 
-        possible_steps = list(set(possible_steps).difference(self.visited_cells))
+        possible_steps = list(
+            set(possible_steps).difference(self.visited_cells))
 
         if possible_steps == []:
-            print("Random choice")
+            # print("Random choice")
             possible_steps = self.model.grid.get_neighborhood(
                 self.pos, moore=False, include_center=False
             )
-
 
         new_position = self.random.choice(possible_steps)
 
@@ -226,7 +226,7 @@ def get_total_moves(model):
     return total_moves
 
 
-class VacuumModel(mesa.Model):
+class VacuumModelInt(mesa.Model):
     # Modelo de la simulación
     def __init__(self, width, height, N, boxeCells, max_steps=100):
         self.num_agents = N
@@ -284,7 +284,7 @@ class VacuumModel(mesa.Model):
                 x = self.random.randrange(self.grid.width)
                 y = self.random.randrange(self.grid.height)
 
-            print("Caja", i, ":", (x, y))
+            # print("Caja", i, ":", (x, y))
 
             self.grid.place_agent(box, (x, y))
 
@@ -362,10 +362,10 @@ class VacuumModel(mesa.Model):
                 self.schedule.step()
 
         # Print counter for each stack
-        for stack in self.stacks:
-            print("Stack", stack.pos, ":", stack.boxes)
+        # for stack in self.stacks:
+            # print("Stack", stack.pos, ":", stack.boxes)
 
-        print("Total boxes in stacks:", self.get_total_boxes_in_stacks())
+        # print("Total boxes in stacks:", self.get_total_boxes_in_stacks())
 
     def run_model(self):
         # Mientras la simulación se esté ejecutando

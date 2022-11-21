@@ -1,7 +1,7 @@
 import mesa
 
 # from model import VacuumModel
-from robot_agents import Box, Vacuum, Obstacle, BoxStack, VacuumModel
+from robot_agents import Box, Vacuum, Obstacle, BoxStack, VacuumModelInt
 
 
 def agent_portrayal(agent):
@@ -131,7 +131,7 @@ model_params = {
 
 # Create server
 server = mesa.visualization.ModularServer(
-    VacuumModel,
+    VacuumModelInt,
     [grid, chart, pie_chart, chart2, total_moves_chart],
     "Robot Model Inteligente",
     model_params,

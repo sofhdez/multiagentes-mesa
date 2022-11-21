@@ -85,7 +85,7 @@ class Vacuum(mesa.Agent):
             self.go_to_stack()
 
         # Imprimir el estado del agente de tipo Vacuum
-        print("Vacuum", self.unique_id, ":", self.state)
+        # print("Vacuum", self.unique_id, ":", self.state)
 
     def move(self):
         # Obtiene la lista de las posiciones vecinas
@@ -273,8 +273,8 @@ class VacuumModel(mesa.Model):
                 self.schedule.step()
 
         # Print counter for each stack
-        for stack in self.stacks:
-            print("Stack", stack.pos, ":", stack.boxes)
+        # for stack in self.stacks:
+            # print("Stack", stack.pos, ":", stack.boxes)
 
         # Imprime el número de celdas boxe
         # print("boxe cells:", self.count_boxe_cells())
