@@ -48,6 +48,11 @@ class Vacuum(mesa.Agent):
 
         self.nearest_stack = self.model.stacks[self.unique_id]
 
+        self.id = unique_id
+
+        self.visited_cells = []
+        self.last_pos = ()
+
     def check_for_box(self):
         # Get the list of agents in the current position
         cellmates = self.model.grid.get_cell_list_contents([self.pos])
@@ -55,8 +60,7 @@ class Vacuum(mesa.Agent):
         # If there is a Dirt agent
         if any(isinstance(agent, Box) for agent in cellmates):
             # Get the Dirt agent
-            box = next(
-                agent for agent in cellmates if isinstance(agent, Box))
+            box = next(agent for agent in cellmates if isinstance(agent, Box))
 
             # Remove the Dirt agent
             self.model.grid.remove_agent(box)
@@ -70,6 +74,8 @@ class Vacuum(mesa.Agent):
             return True
 
     def step(self):
+        
+        self.visited_cells.append((self.pos[0], self.pos[1]))
         if self.state == "Iniciando":
             self.state = "Moviendo"
         elif self.state == "Moviendo":
@@ -80,25 +86,49 @@ class Vacuum(mesa.Agent):
             self.go_to_stack()
 
         # Imprimir el estado del agente de tipo Vacuum
-        print("Vacuum", self.unique_id, ":", self.state,
-              ", stack:", self.nearest_stack.unique_id, ", pos:", self.pos)
+        print(
+            "Vacuum",
+            self.unique_id,
+            ":",
+            self.state,
+            ", stack:",
+            self.nearest_stack.unique_id,
+            ", pos:",
+            self.pos,
+        )
 
     def move(self):
         # Obtiene la lista de las posiciones vecinas
-        possible_steps = self.model.grid.get_neighborhood(
-            self.pos, moore=False, include_center=False)
+        x_min = self.model.all_edges[0][self.unique_id][0]
+        x_max = self.model.all_edges[0][self.unique_id][1]
+        y_min = self.model.all_edges[1][self.unique_id][0]
+        y_max = self.model.all_edges[1][self.unique_id][1]
 
-        # Selecciona una posición vecina al azar
+        possible_steps = self.model.grid.get_neighborhood(
+            self.pos, moore=False, include_center=False
+        )
+
+        possible_steps = list(set(possible_steps).difference(self.visited_cells))
+
+        if possible_steps == []:
+            print("Random choice")
+            possible_steps = self.model.grid.get_neighborhood(
+                self.pos, moore=False, include_center=False
+            )
+
+
         new_position = self.random.choice(possible_steps)
 
         # Si la posición vecina está dentro de los edges
         x_pos = new_position[0]
         y_pos = new_position[1]
-
-        x_min = self.model.all_edges[0][self.unique_id][0]
-        x_max = self.model.all_edges[0][self.unique_id][1]
-        y_min = self.model.all_edges[1][self.unique_id][0]
-        y_max = self.model.all_edges[1][self.unique_id][1]
+        while new_position == self.last_pos or (x_pos < x_min or x_pos > x_max or y_pos < y_min or y_pos > y_max):
+            new_position = self.random.choice(possible_steps)
+            possible_steps = self.model.grid.get_neighborhood(
+                self.pos, moore=False, include_center=False
+            )
+            x_pos = new_position[0]
+            y_pos = new_position[1]
 
         # If the position is outside the edges
         # if x_pos < x_min or x_pos > x_max or y_pos < y_min or y_pos > y_max:
@@ -107,9 +137,14 @@ class Vacuum(mesa.Agent):
 
         if x_pos >= x_min and x_pos <= x_max and y_pos >= y_min and y_pos <= y_max:
             # Si la posición vecina no es un obstáculo
-            if not any(isinstance(agent, Obstacle) for agent in self.model.grid.get_cell_list_contents([new_position])):
+            if not any(
+                isinstance(agent, Obstacle)
+                for agent in self.model.grid.get_cell_list_contents([new_position])
+            ):
                 # Mueve el agente de tipo Vacuum a la nueva posición
                 self.model.grid.move_agent(self, new_position)
+            else:
+                self.visited_cells.append((x_pos, y_pos))
 
     def go_to_stack(self):
         # nearest_stack = self.model.stacks[0]
@@ -135,8 +170,9 @@ class Vacuum(mesa.Agent):
                     self.moves += 1
             else:
                 # Set the nearest stack to the next one
-                self.nearest_stack = self.model.stacks[self.model.stacks.index(
-                    self.nearest_stack) + 1]
+                self.nearest_stack = self.model.stacks[
+                    self.model.stacks.index(self.nearest_stack) + 1
+                ]
 
     def move_to_stack(self, nearest_stack):
         # Calculate the distance to the nearest stack
@@ -146,13 +182,19 @@ class Vacuum(mesa.Agent):
         # First move in the X axis
         if distanceX > 0:
             new_pos = (self.pos[0] - 1, self.pos[1])
-            if not any(isinstance(agent, Obstacle) for agent in self.model.grid.get_cell_list_contents([new_pos])):
+            if not any(
+                isinstance(agent, Obstacle)
+                for agent in self.model.grid.get_cell_list_contents([new_pos])
+            ):
                 self.model.grid.move_agent(self, new_pos)
 
             # self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
         elif distanceX < 0:
             new_pos = (self.pos[0] + 1, self.pos[1])
-            if not any(isinstance(agent, Obstacle) for agent in self.model.grid.get_cell_list_contents([new_pos])):
+            if not any(
+                isinstance(agent, Obstacle)
+                for agent in self.model.grid.get_cell_list_contents([new_pos])
+            ):
                 self.model.grid.move_agent(self, new_pos)
 
             # self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
@@ -160,13 +202,19 @@ class Vacuum(mesa.Agent):
         # Then move in the Y axis
         if distanceY > 0:
             new_pos = (self.pos[0], self.pos[1] - 1)
-            if not any(isinstance(agent, Obstacle) for agent in self.model.grid.get_cell_list_contents([new_pos])):
+            if not any(
+                isinstance(agent, Obstacle)
+                for agent in self.model.grid.get_cell_list_contents([new_pos])
+            ):
                 self.model.grid.move_agent(self, new_pos)
 
-            #self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+            # self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
         elif distanceY < 0:
             new_pos = (self.pos[0], self.pos[1] + 1)
-            if not any(isinstance(agent, Obstacle) for agent in self.model.grid.get_cell_list_contents([new_pos])):
+            if not any(
+                isinstance(agent, Obstacle)
+                for agent in self.model.grid.get_cell_list_contents([new_pos])
+            ):
                 self.model.grid.move_agent(self, new_pos)
 
 
@@ -195,8 +243,22 @@ class VacuumModel(mesa.Model):
 
         # Crea los obstáculos
         # Posiciones de los obstáculos
-        obstacles = [(3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (3, 8),
-                     (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), ]
+        obstacles = [
+            (3, 2),
+            (3, 3),
+            (3, 4),
+            (3, 5),
+            (3, 6),
+            (3, 7),
+            (3, 8),
+            (6, 2),
+            (6, 3),
+            (6, 4),
+            (6, 5),
+            (6, 6),
+            (6, 7),
+            (6, 8),
+        ]
         for cell in range(len(obstacles)):
             obstacle = Obstacle(obstacles[cell], self)
             self.grid.place_agent(obstacle, obstacles[cell])
@@ -227,14 +289,14 @@ class VacuumModel(mesa.Model):
             self.grid.place_agent(box, (x, y))
 
         # Crea los agentes
-        '''
+        """
         b    x       y
         0    [0, 3]  [0, 4]
         1    [0, 3]  [5, 9]
         2    [6, 9]  [0, 4]
         3    [6, 9]  [5, 9]
         4    [4, 5]  [0, 9]
-        '''
+        """
         # Edges of the zone where each agent can move
         edgesX = [[0, 3], [0, 3], [6, 9], [6, 9], [4, 5]]
         edgesY = [[0, 4], [5, 9], [0, 4], [5, 9], [0, 9]]

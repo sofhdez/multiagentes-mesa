@@ -9,11 +9,13 @@ def agent_portrayal(agent):
     if agent is None:
         return
 
-    portrayal = {"Shape": "circle",
-                 "Filled": "true",
-                 "Layer": 0,
-                 "Color": "red",
-                 "r": 0.4}
+    portrayal = {
+        "Shape": "circle",
+        "Filled": "true",
+        "Layer": 0,
+        "Color": "red",
+        "r": 0.4,
+    }
 
     if type(agent) is Box:
         if agent.state == "boxe":
@@ -24,7 +26,6 @@ def agent_portrayal(agent):
             # portrayal["scale"] = 0.9
             portrayal["Layer"] = 0
             portrayal["Id"] = agent.unique_id
-
         else:
             portrayal["Color"] = "white"
             portrayal["Layer"] = 1
@@ -68,13 +69,11 @@ width = 10
 height = 10
 
 # Create canvas grid
-grid = mesa.visualization.CanvasGrid(
-    agent_portrayal, width, height, 500, 500)
+grid = mesa.visualization.CanvasGrid(agent_portrayal, width, height, 500, 500)
 # Chart of boxe cells with labels
 chart = mesa.visualization.ChartModule(
     [{"Label": "boxe cells", "Color": "Black"}],
     data_collector_name="datacollector",
-
     # set the x axis to be the step count
     canvas_height=50,
     canvas_width=80,
@@ -87,7 +86,6 @@ pie_chart = mesa.visualization.PieChartModule(
         {"Label": "Clean cells", "Color": "Blue"},
     ],
     data_collector_name="datacollector",
-
     # set the size of the pie chart
     canvas_height=200,
     canvas_width=200,
@@ -115,10 +113,8 @@ model_params = {
     # Tamaño del mundo
     "width": width,
     "height": height,
-
     # Número de agentes
     "N": 5,
-
     # Porcentaje de celdas inicialmente sucias
     # "boxeCells": mesa.visualization.Slider(
     #     "Percentage of boxe cells",
@@ -129,15 +125,16 @@ model_params = {
     #     description="Choose how many cells to start boxe",
     # ),
     "boxeCells": 15,
-
     # Tiempo máximo de ejecución.
     "max_steps": 300,
 }
 
 # Create server
 server = mesa.visualization.ModularServer(
-    VacuumModel, [grid, chart, pie_chart,
-                  chart2, total_moves_chart], "Robot Model Inteligente", model_params
+    VacuumModel,
+    [grid, chart, pie_chart, chart2, total_moves_chart],
+    "Robot Model Inteligente",
+    model_params,
 )
 
 # Launch server
