@@ -81,6 +81,37 @@ El diseño y despliegue debe incluir:
   - Los robots comenzarán a operar en posiciones predeterminadas (aleatorias).
   - Los robots detectarán y reaccionarán a colisiones entre ellos. Determina e implementa un sistema básico para esto (por ejemplo, detenerse previo a una colisión y asignar el paso a uno de los robots).
 
+### Almacén
+
+Para el lugar en el que se estaran implementando los robots se diseño un alamacen en el cual, se personalizaron la estetica de este mismo, tanto el piso del almacen al igual que las paredes del mismo.
+Dentro del mismo almacen se diseñaron estantes personalizados, al igual que los materiales y texturas del mismo.
+
+### Modelos de caja
+
+Para el mismo alamcen se diseñaron un modelo de caja que estarian en las estanterias del los mismos estantes, dando un diseño mucho más realista del alamacen.
+
+### Modelos de Robots
+
+Se diseñaron 5 modelos de robots personalizados que tienen la funcionalidad de servir como agente que recogera las cajas.
+Cada robot cuenta con diferentes tipo de iluminación, material y texturas diseñadas para darle personalidad a cada robot.
+Los robots dentro de Unity son GameObjects con componentes que le permiten tener una interación con el ambiente.
+
+### Movimiento
+
+Cada robot al igual que todo el alamcen cuenta con un boxcolider, para poder detectar coliciónes entre los mismos. A cada modelo del robot se le implemento un componte de script para el funcionamiento de sus movimientos y en diferentes angulos de movimiento. El script cuenta con una funcionalidad de empezar con un movimiento aleatorio en una dirección, al detectar o colisionar un box colider ya sea de una pared, estante o algun otro robot, eligira e manera aleaotoria una nueva trayecgtoria.
+
+### Velocidad 
+
+Cada robot tiene una unidad de velocidad personalizada, la cual se le puede modificar manualmente para cada robot.
+
+### Inteligencia
+
+Para evitar conflictos de eficiencia al recorrer el alamcen, cada robot cuenta con un sistema de prioridad el cual funciona de manera que, al colicionar con algun otro robot, el robot con mayor velocidad de movimiento seguira con su dirección de movimiento, por otra parte, aquel robot con menor velocidad de movimiento tendra que ceder el paso y cambiar de dirección.
+
+### Posiciónes
+
+Para la implementación del posicionamiento de cada de los robots se creo un robot manager que permite distribuir a los robot en el almacén de manera aleatoria en todo el almacén.
+
 ## Autores
 
 - Abiel Moisés Borja García A01654937
