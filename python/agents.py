@@ -1,3 +1,9 @@
+# Abiel Moisés Borja García         A01654937
+# Gael Eduardo Pérez Gómez          A01753336
+# Marco Uriel Pérez Gutiérrez       A01660337
+# Sofía Margarita Hernández Muñoz   A01655084
+
+
 import mesa
 
 # from model import VacuumModel
