@@ -52,13 +52,13 @@ El modelo básico cuenta con 5 robots que se mueven de manera aleatoria hacia ar
 
 Después de recoger una gráfica, este se mueve hacia la pila más cercana para 'depositar' la caja y regresar a buscar en el resto del almacén.
 
-[Video de demostración](#)
+[Video de demostración](https://drive.google.com/file/d/1wiSOyhpr2vfoFqKS43xY8yjRBlGlxilq/view?usp=sharing)
 
 ### Inteligente
 
 **Descripción**
 
-[Video de demostración](#)
+[Video de demostración](https://drive.google.com/file/d/1VcvI71xLhD6RHvlzhsE_8qXu-0iIk2G-/view?usp=sharing)
 
 ## Parte 2
 
