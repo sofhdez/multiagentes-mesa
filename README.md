@@ -56,6 +56,8 @@ Después de recoger una gráfica, este se mueve hacia la pila más cercana para 
 
 ### Inteligente
 
+En este modelo cada agenet se dedica a recorrer exclusivamente un area del mapa además de que al hacer su recorrido almacena las posiciones que ya ha visitado, para poder darle prioridad y vistar aquellas que no conoce, esto con el fin de que pueda tomar decisiones más acertadas sobre a donde ir.
+
 **Descripción**
 
 [Video de demostración](https://drive.google.com/file/d/1VcvI71xLhD6RHvlzhsE_8qXu-0iIk2G-/view?usp=sharing)
