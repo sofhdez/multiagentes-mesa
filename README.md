@@ -46,6 +46,18 @@ Este agente contará con un contador de movimientos y de cajas recogidas, de la 
 
 ### Modelo
 
+La características de nuestro modelo son:
+
+Ambiente: Discreto
+Observable: Parcialmente
+Agentes: Multiagente
+Clasificación: Estocástico
+
+El modelo es discreto ya que existe un número limitado de acciones a realizar, esto significa que el modelo acaba cuando los robots hayan recogido todas las cajas y todas las celdas estén limpias.
+El modelo es parcialmente observable ya que el los robots tienen un poco de información del estado del ambiente, por ejemplo saben diferenciar que es una caja. Pero no saben donde se encuentran las cajas, esto significa que tienen un poco de información del ambiente, pero no toda.
+Hay varios agentes, lo cual significa que es multiagente.
+Podemos definir el modelo como estocástico, ya que cuando los robots aparecen hacen movimientos aleatorios, y cuando recojen una caja se vuelven deterministas, ya que los robots si saben donde ir y dejarlas. Pero la clasificación final ees estocástico. 
+
 ### Tonto
 
 El modelo básico cuenta con 5 robots que se mueven de manera aleatoria hacia arriba, abajo, izquierda o derecha. Estos agentes no pueden moverse en celdas que estén ocupadas por obstaculos u otros robots.
