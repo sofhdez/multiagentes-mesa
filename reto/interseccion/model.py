@@ -6,7 +6,7 @@ from agents import TrafficLight, Vehicle
 from schedule import RandomActivationByType
 
 
-class StreetModel(mesa.Model):
+class IntersectionModel(mesa.Model):
     def __init__(self, nVehicles=8, nLights=4, nSize=16):
         super().__init__()
         self.num_vehicles = nVehicles
@@ -61,29 +61,6 @@ class StreetModel(mesa.Model):
             count += 1
             self.grid.place_agent(t, (x, y))
             self.schedule.add(t)
-
-    # Advances the model by one step
-    def step(self):
-        self.counter += 1
-        self.datacollector.collect(self)
-        self.schedule.step()
-        ps = []
-        ss = []
-        for i in range(self.num_vehicles):
-            xy = self.schedule.agents[i].pos
-            p = [xy[0], xy[1], 0]
-            ps.append(p)
-        for i in range(self.num_vehicles, self.num_vehicles + self.num_lights):
-            state = self.schedule.agents[i].state
-            ss.append(state)
-
-        self.count_directions()
-        self.times_vehicle_crossed()
-        return ps, ss
-
-    def run_model(self, step=20):
-        for i in range(step):
-            self.step()
 
     def count_directions(self):
         total_count = {
@@ -158,3 +135,41 @@ class StreetModel(mesa.Model):
 
         # print(count)
         return count
+
+        # Advances the model by one step
+    def step(self):
+        self.counter += 1
+        self.datacollector.collect(self)
+        self.schedule.step()
+
+        positions = []
+        for i in range(self.num_vehicles):
+            car_id = self.schedule.agents[i].unique_id
+            xy = self.schedule.agents[i].pos
+            p = [car_id,
+                 xy[0],
+                 xy[1],
+                 0
+                 ]
+            positions.append(p)
+
+        light_states = []
+        for i in range(self.num_vehicles, self.num_vehicles + self.num_lights):
+            light_id = self.schedule.agents[i].unique_id
+            state = self.schedule.agents[i].state
+
+            s = [light_id,
+                 state
+                 ]
+
+            light_states.append(state)
+
+        # Funciones para gráficos
+        self.count_directions()
+        self.times_vehicle_crossed()
+
+        return positions, light_states
+
+    def run_model(self, step=20):
+        for i in range(step):
+            self.step()

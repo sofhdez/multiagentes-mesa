@@ -1,6 +1,6 @@
-from model import StreetModel
+from model import IntersectionModel
 
-model = StreetModel()
+model = IntersectionModel()
 
 for i in range(20):
     model.step()

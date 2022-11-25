@@ -3,10 +3,10 @@ from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import CanvasGrid
 
 from agents import TrafficLight, Vehicle
-from model import StreetModel
+from model import IntersectionModel
 
 
-def StreetModel_portrayal(agent):
+def IntersectionModel_portrayal(agent):
     if agent is None:
         return
 
@@ -40,7 +40,7 @@ def StreetModel_portrayal(agent):
     return portrayal
 
 
-canvas_element = CanvasGrid(StreetModel_portrayal, 16, 16, 600, 600)
+canvas_element = CanvasGrid(IntersectionModel_portrayal, 16, 16, 600, 600)
 
 # Charts
 directions_chart = mesa.visualization.ChartModule([
@@ -61,8 +61,8 @@ model_params = {
     "nVehicles": 10}
 
 server = ModularServer(
-    StreetModel, [canvas_element,
-                  directions_chart,
-                  crossed_chart], "Traffic Simulation", model_params
+    IntersectionModel, [canvas_element,
+                        directions_chart,
+                        crossed_chart], "Traffic Simulation", model_params
 )
 server.port = 8521
