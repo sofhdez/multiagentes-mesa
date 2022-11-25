@@ -27,12 +27,19 @@ def positionsToJSON(positions):
 
 def lightStatesToJSON(lightStates):
     lightDICT = []
+    count = 0
     for s in lightStates:
         light = {
-            "lightId": s[0],
-            "state": s[1]
+            "lightId": count,
+            "state": s[0]
         }
         lightDICT.append(light)
+        count += 1
+    # for s in range(4):
+    #     light = {
+    #         "state": lightStates[s]
+    #     }
+    #     lightDICT.append(light)
     # return jsonify({'lightStates': lightDICT})
     return json.dumps(lightDICT)
 
@@ -56,11 +63,12 @@ def root():
 
 @app.route('/init', methods=['POST', 'GET'])
 def model_run():
-    positions, lightStates = model.step()
-    return jsonify([{
-        'positions': positionsToJSON(positions),
-        'lightStates': lightStatesToJSON(lightStates)
-    }])
+    [positions, lightStates] = model.step()
+
+    ans = "{ \"positions\": " + positionsToJSON(
+        positions) + ", \"lightStates\": " + lightStatesToJSON(lightStates) + " }"
+
+    return ans
 
 
 if __name__ == '__main__':
