@@ -37,6 +37,13 @@ def IntersectionModel_portrayal(agent):
         elif agent.speed == 4:
             portrayal["Color"] = ["#048FDB"]
 
+        if agent.emergency:
+            portrayal["Shape"] = "rect"
+            portrayal["w"] = 0.5
+            portrayal["h"] = 0.5
+            portrayal["Color"] = ["#violet"]
+            portrayal["Filled"] = "true"
+
     return portrayal
 
 

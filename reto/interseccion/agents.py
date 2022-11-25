@@ -67,6 +67,13 @@ class Vehicle(mesa.Agent):
         # self.speed = 1
         self.speed = random.randint(1, 4)
 
+        # Set if it is an emergency vehicle
+        emergency = random.randint(0, 100)
+        if emergency <= 5:
+            self.emergency = True
+        else:
+            self.emergency = False
+
         # Set the previous position of the vehicle
         self.prev_pos = (0, 0)
 
@@ -212,7 +219,7 @@ class Vehicle(mesa.Agent):
         vehicles = [obj for obj in cellmates if isinstance(obj, Vehicle)]
 
         # If there are no trafficlights and no vehicles
-        # and the new position is not between the edges
+        # and the new position is between the edges
         if len(vehicles) == 0 and len(trafficlights) == 0 and self.in_edges(new_pos) == True:
             # If the vehicle is in the origin
             if self.in_origin(self.pos):
@@ -241,14 +248,14 @@ class Vehicle(mesa.Agent):
 
         # If there are vehicles
         elif len(vehicles) != 0:
-            # Just pass
+            # Don't move the vehicle
             return
 
         # If there are trafficlights
         elif len(trafficlights) != 0:
             # Check if the trafficlight is green
             if trafficlights[0].state == "red":
-                # Just pass
+                # Don't move the vehicle
                 return
 
             # If the trafficlight is green
