@@ -2,7 +2,6 @@
 # Python flask server to interact with Unity. Based on the code provided by Sergio Ruiz.
 # Octavio Navarro. November 2022
 
-import numpy as np
 from flask import Flask, request, jsonify
 # from boids.boid import Boid
 from model import IntersectionModel
