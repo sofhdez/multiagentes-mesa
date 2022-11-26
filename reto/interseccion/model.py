@@ -148,8 +148,8 @@ class IntersectionModel(mesa.Model):
             xy = self.schedule.agents[i].pos
             p = [car_id,
                  xy[0],
-                 xy[1],
-                 0
+                 20,
+                 xy[1]
                  ]
             positions.append(p)
 
