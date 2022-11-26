@@ -248,15 +248,31 @@ class Vehicle(mesa.Agent):
 
         # If there are vehicles
         elif len(vehicles) != 0:
-            # Don't move the vehicle
-            return
+            if self.emergency == False:
+                # Don't move the vehicle
+                return
+            else:
+                # Set the previous position to the current position
+                self.prev_pos = self.pos
+
+                # Move the vehicle to the new position
+                self.current_pos = new_pos
+                self.model.grid.move_agent(self, new_pos)
 
         # If there are trafficlights
         elif len(trafficlights) != 0:
             # Check if the trafficlight is green
             if trafficlights[0].state == "red":
-                # Don't move the vehicle
-                return
+                if self.emergency == False:
+                    # Don't move the vehicle
+                    return
+                else:
+                    # Set the previous position to the current position
+                    self.prev_pos = self.pos
+
+                    # Move the vehicle to the new position
+                    self.current_pos = new_pos
+                    self.model.grid.move_agent(self, new_pos)
 
             # If the trafficlight is green
             else:
