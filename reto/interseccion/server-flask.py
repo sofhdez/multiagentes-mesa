@@ -2,7 +2,6 @@
 # Python flask server to interact with Unity. Based on the code provided by Sergio Ruiz.
 # Octavio Navarro. November 2022
 
-import numpy as np
 from flask import Flask, request, jsonify
 # from boids.boid import Boid
 from model import IntersectionModel
@@ -18,7 +17,8 @@ def positionsToJSON(positions):
             "carId": p[0],
             "x": p[1],
             "y": p[2],
-            "z": p[3]
+            "z": p[3],
+            "ambulance": p[4]
         }
         posDICT.append(pos)
     # return jsonify({'positions': posDICT})
