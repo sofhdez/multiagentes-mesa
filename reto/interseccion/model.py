@@ -146,10 +146,12 @@ class IntersectionModel(mesa.Model):
         for i in range(self.num_vehicles):
             car_id = self.schedule.agents[i].unique_id
             xy = self.schedule.agents[i].pos
+            ambulance = self.schedule.agents[i].emergency
             p = [car_id,
                  xy[0],
                  20,
-                 xy[1]
+                 xy[1],
+                 ambulance
                  ]
             positions.append(p)
 
