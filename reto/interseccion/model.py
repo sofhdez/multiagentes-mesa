@@ -7,7 +7,7 @@ from schedule import RandomActivationByType
 
 
 class IntersectionModel(mesa.Model):
-    def __init__(self, nVehicles=8, nLights=4, nSize=16):
+    def __init__(self, nVehicles=8, nLights=4, nSize=16, percent_emergency=0.2):
         super().__init__()
         self.num_vehicles = nVehicles
         self.num_lights = nLights
@@ -17,6 +17,7 @@ class IntersectionModel(mesa.Model):
         self.counter = 0
 
         self.collisions = 0
+        self.percent_emergency = percent_emergency
 
         self.datacollector = DataCollector(
             {
@@ -52,7 +53,7 @@ class IntersectionModel(mesa.Model):
             y2 = orient[rand][1]
 
             # Emergency vehicles
-            v = Vehicle(i, (x1, y1), (x2, y2), 0.2, self)
+            v = Vehicle(i, (x1, y1), (x2, y2), self.percent_emergency, self)
             self.grid.place_agent(v, (x1, y1))
             self.schedule.add(v)
 
