@@ -1,2 +1,4 @@
-Flask>=1.0.0
-mesa
+flask==2.2.2
+mesa==1.1.1
+numpy==1.23.0
+pandas==1.5.2
