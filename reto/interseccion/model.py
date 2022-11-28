@@ -25,11 +25,11 @@ class IntersectionModel(mesa.Model):
                 "Emergency": self.count_emergency,
                 "Emergency_collisions": lambda m: m.collisions,
                 "TrafficLight": lambda m: m.schedule.get_type_count(TrafficLight),
-                "Car0_direction": lambda m: m.count_directions()["Car0"],
-                "Car1_direction": lambda m: m.count_directions()["Car1"],
-                "Car2_direction": lambda m: m.count_directions()["Car2"],
-                "Car3_direction": lambda m: m.count_directions()["Car3"],
-                "Car4_direction": lambda m: m.count_directions()["Car4"],
+                "Car0_direction": lambda m: m.count_directions()[0],
+                "Car1_direction": lambda m: m.count_directions()[1],
+                "Car2_direction": lambda m: m.count_directions()[2],
+                "Car3_direction": lambda m: m.count_directions()[3],
+                "Car4_direction": lambda m: m.count_directions()[4],
                 "Vehicles_crossed_left": lambda m: m.times_vehicle_crossed()["left"],
                 "Vehicles_crossed_up": lambda m: m.times_vehicle_crossed()["up"],
                 "Vehicles_crossed_down": lambda m: m.times_vehicle_crossed()["down"],
@@ -78,13 +78,13 @@ class IntersectionModel(mesa.Model):
         return count
 
     def count_directions(self):
-        total_agents = {}
+        total_agents = []
 
         for i in range(self.num_vehicles):
             agent = self.schedule.agents[i]
 
             # Add to total agents
-            total_agents[agent.unique_id] = agent.change_direction
+            total_agents.append(agent.change_direction)
 
         return total_agents
 
