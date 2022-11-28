@@ -82,6 +82,9 @@ class Vehicle(mesa.Agent):
 
         self.current_pos = (self.pos_x, self.pos_y)
 
+        # Counter of collisions
+        self.collisions = 0
+
     def in_edges(self, pos):
         # Check if the vehicle is in the edges
         result = (pos[0] >= 0 and pos[0] < self.model.size  # X in range
@@ -252,6 +255,9 @@ class Vehicle(mesa.Agent):
                 # Don't move the vehicle
                 return
             else:
+                # Add collision to the model
+                self.model.collisions += 1
+
                 # Set the previous position to the current position
                 self.prev_pos = self.pos
 
