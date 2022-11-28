@@ -50,7 +50,9 @@ class IntersectionModel(mesa.Model):
             y1 = origin_pos[rand][1]
             x2 = orient[rand][0]
             y2 = orient[rand][1]
-            v = Vehicle(i, (x1, y1), (x2, y2), self)
+
+            # Emergency vehicles
+            v = Vehicle(i, (x1, y1), (x2, y2), 0.2, self)
             self.grid.place_agent(v, (x1, y1))
             self.schedule.add(v)
 

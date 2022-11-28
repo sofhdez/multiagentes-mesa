@@ -53,7 +53,7 @@ class TrafficLight(mesa.Agent):
 class Vehicle(mesa.Agent):
     # Agent that represents a vehicle
 
-    def __init__(self, unique_id, pos, direction, model):
+    def __init__(self, unique_id, pos, direction, percentageEmergency, model):
         super().__init__(unique_id, model)
         # Set the position of the vehicle
         self.pos_x = pos[0]
@@ -68,8 +68,9 @@ class Vehicle(mesa.Agent):
         self.speed = random.randint(1, 4)
 
         # Set if it is an emergency vehicle
+        maxEmergency = 100 * percentageEmergency
         emergency = random.randint(0, 100)
-        if emergency <= 5:
+        if emergency <= maxEmergency:
             self.emergency = True
         else:
             self.emergency = False
