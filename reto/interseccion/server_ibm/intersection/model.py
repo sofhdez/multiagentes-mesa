@@ -2,8 +2,9 @@ import mesa
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
-from agents import TrafficLight, Vehicle
-from schedule import RandomActivationByType
+from .agents import TrafficLight, Vehicle
+# from agents import TrafficLight, Vehicle
+from .schedule import RandomActivationByType
 
 
 class IntersectionModel(mesa.Model):
