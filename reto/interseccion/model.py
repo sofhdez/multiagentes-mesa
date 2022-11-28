@@ -22,7 +22,7 @@ class IntersectionModel(mesa.Model):
             {
                 "Vehicle": lambda m: m.schedule.get_type_count(Vehicle),
                 "Emergency": self.count_emergency,
-                "Emergency_collisions": self.collisions,
+                "Emergency_collisions": lambda m: m.collisions,
                 "TrafficLight": lambda m: m.schedule.get_type_count(TrafficLight),
                 "Vehicles_up": lambda m: m.count_directions()["up"],
                 "Vehicles_down": lambda m: m.count_directions()["down"],
