@@ -53,7 +53,7 @@ class TrafficLight(mesa.Agent):
 class Vehicle(mesa.Agent):
     # Agent that represents a vehicle
 
-    def __init__(self, unique_id, pos, direction, model):
+    def __init__(self, unique_id, pos, direction, percentageEmergency, model):
         super().__init__(unique_id, model)
         # Set the position of the vehicle
         self.pos_x = pos[0]
@@ -68,8 +68,9 @@ class Vehicle(mesa.Agent):
         self.speed = random.randint(1, 4)
 
         # Set if it is an emergency vehicle
+        maxEmergency = 100 * percentageEmergency
         emergency = random.randint(0, 100)
-        if emergency <= 5:
+        if emergency <= maxEmergency:
             self.emergency = True
         else:
             self.emergency = False
@@ -81,6 +82,9 @@ class Vehicle(mesa.Agent):
         self.corner_move = (0, 0)
 
         self.current_pos = (self.pos_x, self.pos_y)
+
+        # Counter of changes of direction
+        self.change_direction = 0
 
     def in_edges(self, pos):
         # Check if the vehicle is in the edges
@@ -133,6 +137,7 @@ class Vehicle(mesa.Agent):
             self.corner_move = (0, -1)
 
         # Set the new direction of the vehicle
+        # self.change_direction += 1
         self.direction_x = self.corner_move[0]
         self.direction_y = self.corner_move[1]
 
@@ -170,6 +175,7 @@ class Vehicle(mesa.Agent):
             # Move one step up
             y += self.speed
 
+        # self.change_direction += 1
         # Return the new position
         new_pos = (x, y)
         return new_pos
@@ -228,6 +234,7 @@ class Vehicle(mesa.Agent):
                 if rand == 1:
                     new_dir = self.model.next_to_origin[self.pos]
                     if self.direction_x != new_dir[0] and self.direction_y != new_dir[1]:
+                        self.change_direction += 1
                         self.direction_x = new_dir[0]
                         self.direction_y = new_dir[1]
 
@@ -248,15 +255,34 @@ class Vehicle(mesa.Agent):
 
         # If there are vehicles
         elif len(vehicles) != 0:
-            # Don't move the vehicle
-            return
+            if self.emergency == False:
+                # Don't move the vehicle
+                return
+            else:
+                # Add collision to the model
+                self.model.collisions += 1
+
+                # Set the previous position to the current position
+                self.prev_pos = self.pos
+
+                # Move the vehicle to the new position
+                self.current_pos = new_pos
+                self.model.grid.move_agent(self, new_pos)
 
         # If there are trafficlights
         elif len(trafficlights) != 0:
             # Check if the trafficlight is green
             if trafficlights[0].state == "red":
-                # Don't move the vehicle
-                return
+                if self.emergency == False:
+                    # Don't move the vehicle
+                    return
+                else:
+                    # Set the previous position to the current position
+                    self.prev_pos = self.pos
+
+                    # Move the vehicle to the new position
+                    self.current_pos = new_pos
+                    self.model.grid.move_agent(self, new_pos)
 
             # If the trafficlight is green
             else:
@@ -270,6 +296,8 @@ class Vehicle(mesa.Agent):
                 # Set a new direction
                 new_dir = [[0, 1, 8, 7], [1, 0, 7, 7],
                            [0, -1, 7, 8], [-1, 0, 8, 8]]
+
+                self.change_direction += 1
                 rand = self.random.randint(0, 3)
 
                 if self.direction_x != new_dir[rand][0] and self.direction_y != new_dir[rand][1]:

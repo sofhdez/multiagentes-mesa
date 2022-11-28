@@ -17,7 +17,8 @@ def positionsToJSON(positions):
             "carId": p[0],
             "x": p[1],
             "y": p[2],
-            "z": p[3]
+            "z": p[3],
+            "ambulance": p[4]
         }
         posDICT.append(pos)
     # return jsonify({'positions': posDICT})

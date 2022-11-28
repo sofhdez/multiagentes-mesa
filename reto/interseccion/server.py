@@ -38,11 +38,8 @@ def IntersectionModel_portrayal(agent):
             portrayal["Color"] = ["#048FDB"]
 
         if agent.emergency:
-            portrayal["Shape"] = "rect"
-            portrayal["w"] = 0.5
-            portrayal["h"] = 0.5
-            portrayal["Color"] = ["#violet"]
-            portrayal["Filled"] = "true"
+            portrayal["Color"] = ["black"]
+            portrayal["r"] = 1
 
     return portrayal
 
