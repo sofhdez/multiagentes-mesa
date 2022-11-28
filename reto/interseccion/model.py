@@ -7,7 +7,7 @@ from schedule import RandomActivationByType
 
 
 class IntersectionModel(mesa.Model):
-    def __init__(self, nVehicles=8, nLights=4, nSize=16):
+    def __init__(self, nVehicles=8, nLights=4, nSize=16, percent_emergency=0.2):
         super().__init__()
         self.num_vehicles = nVehicles
         self.num_lights = nLights
@@ -16,18 +16,24 @@ class IntersectionModel(mesa.Model):
         self.schedule = RandomActivationByType(self)
         self.counter = 0
 
+        self.collisions = 0
+        self.percent_emergency = percent_emergency
+
         self.datacollector = DataCollector(
             {
                 "Vehicle": lambda m: m.schedule.get_type_count(Vehicle),
+                "Emergency": self.count_emergency,
+                "Emergency_collisions": lambda m: m.collisions,
                 "TrafficLight": lambda m: m.schedule.get_type_count(TrafficLight),
-                "Vehicles_up": lambda m: m.count_directions()["up"],
-                "Vehicles_down": lambda m: m.count_directions()["down"],
-                "Vehicles_right": lambda m: m.count_directions()["right"],
-                "Vehicles_left": lambda m: m.count_directions()["left"],
+                "Car0_direction": lambda m: m.count_directions()[0],
+                "Car1_direction": lambda m: m.count_directions()[1],
+                "Car2_direction": lambda m: m.count_directions()[2],
+                "Car3_direction": lambda m: m.count_directions()[3],
+                "Car4_direction": lambda m: m.count_directions()[4],
                 "Vehicles_crossed_left": lambda m: m.times_vehicle_crossed()["left"],
                 "Vehicles_crossed_up": lambda m: m.times_vehicle_crossed()["up"],
                 "Vehicles_crossed_down": lambda m: m.times_vehicle_crossed()["down"],
-                "Vehicles_crossed_right": lambda m: m.times_vehicle_crossed()["right"]
+                "Vehicles_crossed_right": lambda m: m.times_vehicle_crossed()["right"],
             }
         )
 
@@ -46,7 +52,9 @@ class IntersectionModel(mesa.Model):
             y1 = origin_pos[rand][1]
             x2 = orient[rand][0]
             y2 = orient[rand][1]
-            v = Vehicle(i, (x1, y1), (x2, y2), self)
+
+            # Emergency vehicles
+            v = Vehicle(i, (x1, y1), (x2, y2), self.percent_emergency, self)
             self.grid.place_agent(v, (x1, y1))
             self.schedule.add(v)
 
@@ -62,32 +70,23 @@ class IntersectionModel(mesa.Model):
             self.grid.place_agent(t, (x, y))
             self.schedule.add(t)
 
+    def count_emergency(self):
+        count = 0
+        for i in range(self.num_vehicles):
+            if self.schedule.agents[i].emergency:
+                count += 1
+        return count
+
     def count_directions(self):
-        total_count = {
-            "up": 0,
-            "down": 0,
-            "right": 0,
-            "left": 0
-        }
+        total_agents = []
 
         for i in range(self.num_vehicles):
-            direction_x = self.schedule.agents[i].direction_x
-            direction_y = self.schedule.agents[i].direction_y
-            direction = (direction_x, direction_y)
+            agent = self.schedule.agents[i]
 
-            if direction == (0, 1):
-                key = "up"
-            elif direction == (0, -1):
-                key = "down"
-            elif direction == (1, 0):
-                key = "right"
-            elif direction == (-1, 0):
-                key = "left"
+            # Add to total agents
+            total_agents.append(agent.change_direction)
 
-            if key in total_count:
-                total_count[key] += 1
-
-        return total_count
+        return total_agents
 
     def times_vehicle_crossed(self):
         count = {
