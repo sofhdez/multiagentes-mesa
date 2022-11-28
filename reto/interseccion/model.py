@@ -25,10 +25,11 @@ class IntersectionModel(mesa.Model):
                 "Emergency": self.count_emergency,
                 "Emergency_collisions": lambda m: m.collisions,
                 "TrafficLight": lambda m: m.schedule.get_type_count(TrafficLight),
-                "Vehicles_up": lambda m: m.count_directions()["up"],
-                "Vehicles_down": lambda m: m.count_directions()["down"],
-                "Vehicles_right": lambda m: m.count_directions()["right"],
-                "Vehicles_left": lambda m: m.count_directions()["left"],
+                "Car0_direction": lambda m: m.count_directions()["Car0"],
+                "Car1_direction": lambda m: m.count_directions()["Car1"],
+                "Car2_direction": lambda m: m.count_directions()["Car2"],
+                "Car3_direction": lambda m: m.count_directions()["Car3"],
+                "Car4_direction": lambda m: m.count_directions()["Car4"],
                 "Vehicles_crossed_left": lambda m: m.times_vehicle_crossed()["left"],
                 "Vehicles_crossed_up": lambda m: m.times_vehicle_crossed()["up"],
                 "Vehicles_crossed_down": lambda m: m.times_vehicle_crossed()["down"],
@@ -77,31 +78,15 @@ class IntersectionModel(mesa.Model):
         return count
 
     def count_directions(self):
-        total_count = {
-            "up": 0,
-            "down": 0,
-            "right": 0,
-            "left": 0
-        }
+        total_agents = {}
 
         for i in range(self.num_vehicles):
-            direction_x = self.schedule.agents[i].direction_x
-            direction_y = self.schedule.agents[i].direction_y
-            direction = (direction_x, direction_y)
+            agent = self.schedule.agents[i]
 
-            if direction == (0, 1):
-                key = "up"
-            elif direction == (0, -1):
-                key = "down"
-            elif direction == (1, 0):
-                key = "right"
-            elif direction == (-1, 0):
-                key = "left"
+            # Add to total agents
+            total_agents[agent.unique_id] = agent.change_direction
 
-            if key in total_count:
-                total_count[key] += 1
-
-        return total_count
+        return total_agents
 
     def times_vehicle_crossed(self):
         count = {
