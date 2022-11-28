@@ -1,0 +1,4 @@
+---
+applications:
+  - name: interseccion-server
+    random-route: true
