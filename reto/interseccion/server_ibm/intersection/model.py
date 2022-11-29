@@ -59,7 +59,7 @@ class IntersectionModel(mesa.Model):
             self.grid.place_agent(v, (x1, y1))
             self.schedule.add(v)
 
-        pos_lig = [[6, 7], [7, 9], [8, 6], [9, 8]]
+        pos_lig = [[6, 7], [7, 10], [8, 6], [9, 8]]
         count = 0
 
         # Create TrafficLights
