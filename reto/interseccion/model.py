@@ -23,6 +23,7 @@ class IntersectionModel(mesa.Model):
         self.datacollector = DataCollector(
             {
                 "Vehicle": lambda m: m.schedule.get_type_count(Vehicle),
+                "Mean_speed": self.get_mean_speed,
                 "Emergency": self.count_emergency,
                 "Emergency_collisions": lambda m: m.collisions,
                 "TrafficLight": lambda m: m.schedule.get_type_count(TrafficLight),
@@ -136,6 +137,12 @@ class IntersectionModel(mesa.Model):
 
         # print(count)
         return count
+
+    def get_mean_speed(self):
+        total_speed = 0
+        for i in range(self.num_vehicles):
+            total_speed += self.schedule.agents[i].speed
+        return total_speed / self.num_vehicles
 
         # Advances the model by one step
     def step(self):
