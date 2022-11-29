@@ -3,6 +3,7 @@ from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 
 from agents import TrafficLight, Vehicle
+# from agents import TrafficLight, Vehicle
 from schedule import RandomActivationByType
 
 
@@ -42,7 +43,8 @@ class IntersectionModel(mesa.Model):
             (8, 0): [0, 1, 8, 1],
             (0, 7): [1, 0, 1, 7],
             (7, 15): [0, -1, 7, 14],
-            (15, 8): [-1, 0, 14, 10]
+            # Aquí se cambio el 10 por 11
+            (15, 8): [-1, 0, 14, 8]
         }
         orient = [[0, 1], [1, 0], [0, -1], [-1, 0]]
         # Create Vehicles
