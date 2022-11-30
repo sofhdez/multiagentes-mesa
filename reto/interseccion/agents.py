@@ -9,21 +9,71 @@ class TrafficLight(mesa.Agent):
         super().__init__(unique_id, model)
         # Set the position of the traffic light
         self.pos_x = pos[0]
-        self.pox_y = pos[1]
+        self.pos_y = pos[1]
+
+        # pos_lig = [[6, 7], [7, 9], [8, 6], [9, 8]]
+        self.positions_cars = [(5, 7), (7, 10), (8, 5), (10, 8)]
 
         # Set the state of the traffic light
-        self.state = self.set_state()
+        # self.state = self.set_state()
+        self.state = "yellow"
 
         # Set the timer of the traffic light
         self.timer = 20
 
-    def set_state(self):
-        # Set the state of the traffic light if it is in some position
-        if self.pos_x == 6 or self.pos_x == 9:
-            # Set to red
-            return "red"
+        # Counter
+        self.counter = 0
+
+    def get_agents(self):
+        if self.pos_x == 6 and self.pos_y == 7:
+            agents = self.model.grid.get_cell_list_contents(
+                [self.positions_cars[0]])
+
+            # Check if there are any vehicles
+            vehicles = [obj for obj in agents if isinstance(obj, Vehicle)]
+
+        elif self.pos_x == 7 and self.pos_y == 9:
+            agents = self.model.grid.get_cell_list_contents(
+                [self.positions_cars[1]])
+
+            # Check if there are any vehicles
+            vehicles = [obj for obj in agents if isinstance(obj, Vehicle)]
+
+        elif self.pos_x == 8 and self.pos_y == 6:
+            agents = self.model.grid.get_cell_list_contents(
+                [self.positions_cars[2]])
+
+            # Check if there are any trafficlights
+            vehicles = [obj for obj in agents if isinstance(obj, Vehicle)]
+
+        elif self.pos_x == 9 and self.pos_y == 8:
+            agents = self.model.grid.get_cell_list_contents(
+                [self.positions_cars[3]])
+
+            # Check if there are any trafficlights
+            vehicles = [obj for obj in agents if isinstance(obj, Vehicle)]
+
+        if len(vehicles) > 0:
+            # Check if there is an ambulance
+            ambulance = [obj for obj in vehicles if obj.emergency == True]
+            if len(ambulance) > 0:
+                return [False, self.pos_x, self.pos_y]
+            else:
+                return [True, self.pos_x, self.pos_y]
         else:
-            # Set to green
+            return [False, self.pos_x, self.pos_y]
+
+    def set_state(self):
+        # Check if there are vehicles in the agent's position
+        agents = self.get_agents()
+
+        print(agents)
+
+        # If there are vehicles, set the state to red
+        if agents[0] == True:
+            if self.pos_x == agents[1] and self.pos_y == agents[2]:
+                return "red"
+        else:
             return "green"
 
     def change_state(self):
@@ -37,17 +87,22 @@ class TrafficLight(mesa.Agent):
             return "red"
 
     def step(self):
-        # Reduce the timer
-        self.timer = self.timer - 1
+        # self.state = self.set_state()
+        if self.counter < 6:
+            self.state = self.set_state()
+        else:
+            # Reduce the timer
+            self.timer = self.timer - 1
+            # If the timer is between 0 and 8,
+            # and the state is green, change it to red
+            if self.timer == 8 and self.timer > 0 and self.state == "green":
+                self.state = "yellow"
 
-        # If the timer is between 0 and 8,
-        # and the state is green, change it to red
-        if self.timer == 8 and self.timer > 0 and self.state == "green":
-            self.state = "yellow"
+            # If the timer is 0, change the state
+            elif self.timer == 0:
+                self.state = self.change_state()
 
-        # If the timer is 0, change the state
-        elif self.timer == 0:
-            self.state = self.change_state()
+        self.counter += 1
 
 
 class Vehicle(mesa.Agent):
